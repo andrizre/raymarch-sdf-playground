@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Raymarch SDF Playground</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background:#0b0d12; color:#cfd6e4; overflow:hidden; }
+  #glcanvas { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  #ui {
+    position:fixed; top:0; right:0; width:320px; height:100%;
+    background:rgba(13,16,24,0.92); border-left:1px solid #232a3a;
+    padding:14px; overflow-y:auto; font-size:13px;
+    transition: transform .25s;
+  }
+  #ui.hidden { transform: translateX(100%); }
+  #toggle {
+    position:fixed; top:10px; right:330px; z-index:5;
+    background:#1a2233; color:#cfd6e4; border:1px solid #2c3650;
+    padding:6px 12px; border-radius:6px; cursor:pointer; transition:right .25s;
+  }
+  #toggle.closed { right:10px; }
+  h1 { font-size:15px; margin-bottom:4px; color:#e8edf7; }
+  .hint { color:#77839c; font-size:11px; margin-bottom:10px; line-height:1.5; }
+  .shape {
+    border:1px solid #2c3650; border-radius:8px; padding:10px; margin-bottom:10px;
+    background:#12172400; background:#111726;
+  }
+  .shape .row { display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap; }
+  .shape .row:last-child { margin-bottom:0; }
+  .shape label { font-size:11px; color:#8f9cb8; width:56px; }
+  .shape select, .shape input[type=number] {
+    background:#1a2233; border:1px solid #2c3650; color:#cfd6e4;
+    border-radius:4px; padding:3px 6px; font-size:12px; width:86px;
+  }
+  .shape input[type=range] { flex:1; min-width:70px; accent-color:#5b8cff; }
+  .shape input[type=color] { width:36px; height:24px; border:none; background:none; cursor:pointer; }
+  .val { font-size:10px; color:#77839c; width:34px; text-align:right; }
+  .shape .del { margin-left:auto; background:#3a1f2a; color:#e08098; border:1px solid #5b2e3d; border-radius:4px; padding:2px 8px; cursor:pointer; font-size:11px; }
+  .shape .del:hover { background:#4d2735; }
+  button.primary {
+    width:100%; background:#22427a; color:#dfe9ff; border:1px solid #35599f;
+    border-radius:6px; padding:8px; cursor:pointer; font-size:13px; margin-top:4px;
+  }
+  button.primary:hover { background:#2a5091; }
+  .btnrow { display:flex; gap:8px; margin-top:10px; }
+  .btnrow button { flex:1; background:#1a2233; color:#cfd6e4; border:1px solid #2c3650; border-radius:6px; padding:6px; cursor:pointer; font-size:12px; }
+  .btnrow button:hover { background:#223049; }
+  #randomize { background:#274a33; border-color:#3a6b4c; color:#c9ecd4; }
+  #export { background:#4a3a1f; border-color:#6b5a3a; color:#ecd8c9; }
+  kbd { background:#1a2233; border:1px solid #2c3650; border-radius:3px; padding:0 4px; font-size:10px; }
+</style>
+</head>
+<body>
+<canvas id="glcanvas"></canvas>
+<button id="toggle">Panel ▸</button>
+<div id="ui">
+  <h1>Raymarch SDF Playground</h1>
+  <div class="hint">
+    Live GLSL raymarching of signed distance fields with smooth blending.
+    <kbd>Drag</kbd> orbit · <kbd>Scroll</kbd> zoom · <kbd>Right-drag</kbd> pan
+  </div>
+  <div id="shapes"></div>
+  <button class="primary" id="add">+ Add Shape</button>
+  <div class="btnrow">
+    <button id="randomize">🎲 Randomize</button>
+    <button id="export">⬇ Export GLSL</button>
+  </div>
+  <div class="btnrow">
+    <button id="preset1">Blob</button>
+    <button id="preset2">Sculpt</button>
+    <button id="preset3">Tower</button>
+  </div>
+</div>
+
+<script id="vs" type="x-shader/x-vertex">#version 300 es
+in vec2 aPos;
+void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }
+</script>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
